@@ -144,9 +144,46 @@ it does not prove that the prototype is globally optimal.
 ## Validation of this change
 
 Release net10.0 builds of the test and benchmark projects completed without
-warnings on macOS arm64. All 14 `ConfigurationBuilderTests` cases passed. The
+warnings on macOS arm64. The `ConfigurationBuilderTests` cover the prototype and
+the separate phase probe. The
 smoke command passed all four methods in both API arms, and dedicated discovery
 listed only those methods for the combined, Current and Builder entry points.
 The complete repository test suite and paired performance runs were not run.
 There are no timing or allocation improvement claims in this PR; the commands
 above are the reproduction path for collecting them.
+
+## Configuration share of the complete parse
+
+Run the attribution probe in separate processes from BenchmarkDotNet:
+
+```sh
+dotnet run -c Release -f net10.0 --project src/AngleSharp.Benchmarks -- --configuration-phases Current instrumented 10
+dotnet run -c Release -f net10.0 --project src/AngleSharp.Benchmarks -- --configuration-phases Builder instrumented 10
+dotnet run -c Release -f net10.0 --project src/AngleSharp.Benchmarks -- --configuration-phases Current plain 10
+dotnet run -c Release -f net10.0 --project src/AngleSharp.Benchmarks -- --configuration-phases Builder plain 10
+```
+
+Each process warms its own API/mode five times, then measures ten fresh
+configurations, contexts and documents. The instrumented mode brackets
+configuration construction, `BrowsingContext.New` (including service-list
+materialization), and the remaining parse/query/document-and-context disposal.
+Its checksum and registration pipeline match the complete benchmark. It retains
+the async result-task shape of the original parse method. The plain mode calls
+the original, untouched complete operation with only outer observations.
+
+For each launch, configuration setup's share is
+`sum(construction + context) / sum(total)`, computed separately for elapsed time
+and allocated bytes. Do not sum means from separate benchmark rows to construct
+this fraction. Factory activation during parsing remains in the parse phase;
+this is a boundary-based setup share, not a stack-based classification of every
+service-related instruction. In particular it is not the original Jint browser
+allocation profile's approximately 94% figure or a wall-time interpretation of it.
+
+Allocation reads use process-wide `GC.GetTotalAllocatedBytes(true)` to include
+work that crosses threads. They measure allocated bytes, not retained memory,
+and can include runtime/background allocations inside that process. Phase
+observations add overhead; compare instrumented and plain launches, alternate
+their order, and report the difference without subtracting it as a correction.
+The five-warmup diagnostic timing has a different JIT/GC history from BDN's long
+warmup, so report its time shares separately from BDN means. GC counts are provided
+per sample. Keep the idle checks and shared lock around these processes too.

@@ -25,6 +25,7 @@
   <ItemGroup>
     <Compile Include="../AngleSharp.Benchmarks/Configuration/ConfigurationBuilder.cs" Link="Library/ConfigurationBuilderPrototype.cs" />
     <Compile Include="../AngleSharp.Benchmarks/Configuration/JintConfigurationScenario.cs" Link="Library/JintConfigurationScenario.cs" />
+    <Compile Include="../AngleSharp.Benchmarks/Configuration/ConfigurationPhaseProbe.cs" Link="Library/ConfigurationPhaseProbe.cs" />
   </ItemGroup>
 
   <ItemGroup>

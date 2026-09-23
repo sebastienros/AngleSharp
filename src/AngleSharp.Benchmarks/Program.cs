@@ -13,6 +13,14 @@ namespace AngleSharp.Benchmarks
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
+#if NET8_0_OR_GREATER
+            if (args.Length == 4 && args[0] == "--configuration-phases")
+            {
+                ConfigurationExperiment.ConfigurationPhaseProbe.Run(args[1], args[2], Int32.Parse(args[3]));
+                return;
+            }
+#endif
+
             if (args.Length == 1 && args[0] == "--configuration-smoke")
             {
                 foreach (var api in new[] { JintConfigurationBenchmark.ConfigurationApi.Current, JintConfigurationBenchmark.ConfigurationApi.Builder })

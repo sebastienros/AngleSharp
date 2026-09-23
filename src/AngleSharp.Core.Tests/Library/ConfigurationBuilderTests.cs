@@ -143,6 +143,20 @@ namespace AngleSharp.Core.Tests.Library
         }
 
         private interface IService { }
+#if NET8_0_OR_GREATER
+        [TestCase(false)]
+        [TestCase(true)]
+        public void PhaseProbeChecksumsAndAllocationPartitionsMatchTheCompleteOperation(Boolean builder)
+        {
+            var measured = ConfigurationPhaseProbe.Measure(builder, true);
+            var plain = ConfigurationPhaseProbe.Measure(builder, false);
+            Assert.AreEqual(plain.Checksum, measured.Checksum);
+            Assert.AreEqual(21, measured.Checksum);
+            Assert.AreEqual(measured.TotalBytes, measured.ConstructionBytes + measured.ContextBytes + measured.ParseAndDisposeBytes);
+            Assert.IsNull(plain.ConstructionBytes);
+            Assert.IsNull(plain.ContextNs);
+        }
+#endif
         private sealed class Service : IService { }
         private sealed class EqualityTrap
         {
