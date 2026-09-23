@@ -148,9 +148,9 @@ warnings on macOS arm64. The `ConfigurationBuilderTests` cover the prototype and
 the separate phase probe. The
 smoke command passed all four methods in both API arms, and dedicated discovery
 listed only those methods for the combined, Current and Builder entry points.
-The complete repository test suite and paired performance runs were not run.
-There are no timing or allocation improvement claims in this PR; the commands
-above are the reproduction path for collecting them.
+The complete repository test suite was not run. Measured results are recorded
+only in the fork PR body; generated benchmark reports and logs are not committed.
+The commands above are the reproduction path.
 
 ## Configuration share of the complete parse
 
