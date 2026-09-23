@@ -12,6 +12,8 @@
 
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="AngleSharp.Css" />
+    <PackageReference Include="AngleSharp.Xml" />
     <PackageReference Include="CsQuery" Condition=" '$(TargetFramework)' == 'net472' " />
     <PackageReference Include="HtmlAgilityPack" />
     <PackageReference Include="System.Net.Http" />

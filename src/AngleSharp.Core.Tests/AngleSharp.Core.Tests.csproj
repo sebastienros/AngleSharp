@@ -12,12 +12,20 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="AngleSharp.Css" />
+    <PackageReference Include="AngleSharp.Xml" />
     <PackageReference Include="GitHubActionsTestLogger" PrivateAssets="all" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <!-- See AngleSharp.Core.csproj: the IsTargetFrameworkCompatible intrinsic breaks in-process evaluation. -->
     <PackageReference Include="Microsoft.Net.Http" Condition=" '$(TargetFrameworkIdentifier)' != '.NETCoreApp' " />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="../AngleSharp.Benchmarks/Configuration/ConfigurationBuilder.cs" Link="Library/ConfigurationBuilderPrototype.cs" />
+    <Compile Include="../AngleSharp.Benchmarks/Configuration/JintConfigurationScenario.cs" Link="Library/JintConfigurationScenario.cs" />
+    <Compile Include="../AngleSharp.Benchmarks/Configuration/ConfigurationPhaseProbe.cs" Link="Library/ConfigurationPhaseProbe.cs" />
   </ItemGroup>
 
   <ItemGroup>
